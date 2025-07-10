@@ -1,17 +1,17 @@
-version: '3.8' # Версия синтаксиса Docker Compose
+version: '3.8'
 
 services:
-  # Сервис для базы данных PostgreSQL
+
   wallet_db:
-    image: postgres:17.5-alpine # Используем официальный образ PostgreSQL, версия 13, легковесная alpine
-    container_name: wallet-db # Даем имя контейнеру, чтобы его было легко найти
-    environment: # Переменные окружения для настройки PostgreSQL
-      POSTGRES_DB: ${POSTGRES_DB}          # Имя базы данных - будет браться из .env
-      POSTGRES_USER: ${POSTGRES_USER}      # Имя пользователя - будет браться из .env
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Пароль - будет браться из .env
+    image: postgres:17.5-alpine
+    container_name: wallet-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5433:5432" # Пробрасываем порт 5432 из контейнера на порт 5432 вашей машины
+      - "5433:5432"
     volumes:
-      - wallet-db:/var/lib/postgresql/data # Сохраняем данные БД, чтобы они не терялись при перезапуске контейнера
+      - wallet-db:/var/lib/postgresql/data
 volumes:
-  wallet-db: # Объявляем именованный том для сохранения данных БД
+  wallet-db:
