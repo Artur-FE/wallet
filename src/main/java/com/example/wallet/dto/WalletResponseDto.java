@@ -10,5 +10,5 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 public class WalletResponseDto {
-    private BigDecimal amount;
+    private BigDecimal balance;
 }
