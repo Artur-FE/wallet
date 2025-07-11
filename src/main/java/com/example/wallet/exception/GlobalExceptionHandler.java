@@ -1,6 +1,7 @@
 package com.example.wallet.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -67,5 +68,37 @@ import java.util.Map;
         body.put("message", errorMessage);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CannotAcquireLockException.class)
+    public ResponseEntity<Object> handleCannotAcquireLockException(CannotAcquireLockException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("status", HttpStatus.LOCKED.value());
+        body.put("error", "Resource Locked");
+        body.put("message", "The wallet is temporarily unavailable due to concurrent access. Please try again.");
+
+        return new ResponseEntity<>(body, HttpStatus.LOCKED);
+    }
+
+    @ExceptionHandler(WalletNotFoundException.class)
+    public ResponseEntity<Object> handleWalletNotFoundException(WalletNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<Object> handleInsufficientFundsException(InsufficientFundsException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Operation impossible");
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

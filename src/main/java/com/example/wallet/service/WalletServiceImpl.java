@@ -27,20 +27,20 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public WalletResponseDto operation(WalletRequestDto walletRequestDto) {
         Wallet wallet = walletRepository
-                .findById(walletRequestDto.getWalletId())
+                .findByIdForUpdate(walletRequestDto.getWalletId())
                 .orElseThrow(() -> new WalletNotFoundException(walletRequestDto.getWalletId()));
-        log.info("получили wallet {} по ID {} ", wallet, wallet.getId());
-        log.info("баланс - {}", wallet.getBalance());
+        log.info("WalletServiceImpl, метод operation, получили wallet {} по ID {} ", wallet, wallet.getId());
+        log.info("WalletServiceImpl, метод operation, баланс - {}", wallet.getBalance());
 
         if (walletRequestDto.getOperationType().equals(OperationType.DEPOSIT)){
             wallet.setBalance(wallet.getBalance().add(walletRequestDto.getAmount()));
-            log.info("Баланс увеличен и равен {}", wallet.getBalance());
+            log.info("WalletServiceImpl, метод operation, баланс увеличен и равен {}", wallet.getBalance());
         } else if (walletRequestDto.getOperationType().equals(OperationType.WITHDRAW)){
             if(wallet.getBalance().compareTo(walletRequestDto.getAmount()) < 0) {
                 throw new InsufficientFundsException();
             }
             wallet.setBalance(wallet.getBalance().subtract(walletRequestDto.getAmount()));
-            log.info("Баланс уменьшен и равен {}", wallet.getBalance());
+            log.info("WalletServiceImpl, метод operation, баланс уменьшен и равен {}", wallet.getBalance());
         }
         return walletMapper.entityToResponse(wallet);
     }
@@ -49,10 +49,10 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public WalletResponseDto getBalanceByWalletId(UUID walletId) {
         Wallet wallet = walletRepository
-                .findById(walletId)
+                .findByIdForUpdate(walletId)
                 .orElseThrow(() -> new WalletNotFoundException(walletId));
-        log.info("получили wallet {} по ID {} ", wallet, walletId);
-        log.info("баланс - {}", wallet.getBalance());
+        log.info("WalletServiceImpl, метод getBalanceByWalletId получили wallet {} по ID {} ", wallet, walletId);
+        log.info("WalletServiceImpl, метод getBalanceByWalletId баланс - {}", wallet.getBalance());
         return walletMapper.entityToResponse(wallet);
     }
 
@@ -60,7 +60,7 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public WalletResponseDto createWallet() {
         Wallet wallet = new Wallet();
-        log.info("новый кошелек создан, ID {}, баланс {}", wallet.getId(), wallet.getBalance());
+        log.info("WalletServiceImpl, метод createWallet новый кошелек создан, ID {}, баланс {}", wallet.getId(), wallet.getBalance());
         walletRepository.save(wallet);
         return walletMapper.entityToResponse(wallet);
     }
