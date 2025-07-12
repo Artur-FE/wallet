@@ -52,11 +52,11 @@
 
 POST http://localhost:8080/api/v1/wallet
 
-``` {
+(``` {
   "walletId": "e0d847f2-1310-4e95-86ed-ffdb2c857222",
   "operationType": "DEPOSIT",
   "amount": 100.00
-}  ```
+} ```)
 
 **Ответ:**
 {
